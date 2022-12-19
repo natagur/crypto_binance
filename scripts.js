@@ -108,6 +108,9 @@ async function viewActualPrice(thisLink, pairs, coin, money) {
 
     setTimeout(() => {
         result.forEach((el) => {
+            // console.log(coin);
+            // console.log(el.pair);
+            // console.log(el.pair.indexOf(coin));
             let typeMathOperation = el.pair.indexOf(coin) === 0 ? 'multiply' : el.pair.indexOf(coin) > -1 ? 'divide' : 'false';
             coin = el.pair.replace(coin, '');
 

@@ -26,3 +26,7 @@ td p,
 .result_update .list div:last-child {
     border: 1px solid firebrick;
 }
+#reloadGraf,
+#viewFoundChain {
+    display: none;
+}

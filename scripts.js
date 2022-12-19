@@ -112,12 +112,15 @@ async function viewActualPrice(thisLink, pairs, coin, money) {
             coin = el.pair.replace(coin, '');
 
             let newMoney = el.ask1;
+            let bidOrAsk = '';
             if (typeMathOperation === 'multiply') {
+                bidOrAsk = 'ask';
                 newMoney = money * el.ask1;
             } else {
+                bidOrAsk = 'bid';
                 newMoney = money / el.bid1;
             }
-            let str = '<div class="content"><p>'+el.pair+' ('+typeMathOperation+')<br>m:'+money+'<br>nm:'+newMoney+'</p><div class="list"><div>'+el.strAsks+'</div><div>'+el.strBids+'</div></div></div>';
+            let str = '<div class="content"><p>'+el.pair+' ('+typeMathOperation+': ('+bidOrAsk+'))<br>m:'+money+'<br>nm:'+newMoney+'</p><div class="list"><div>'+el.strAsks+'</div><div>'+el.strBids+'</div></div></div>';
 
             money = newMoney;
             thisLink.parents('tr').find('.result_update').append(str);
@@ -159,6 +162,8 @@ function viewPairs() {
 
 function getListAllCoin() {
     listCoin = {};
+    listCoinWithPairs = {};
+    let listPrice = [];
     document.querySelector('#status_load').innerHTML = 'Start load coin...';
     let url = 'http://createwebpages.ru/crypto/load.php?url=https://api.coinpaprika.com/v1/coins';
     console.log("GET: "+url);
@@ -243,6 +248,7 @@ function getListCoin(idMarket) {
         let size = Object.keys(listPrice).length;
         console.log('end load file with '+size+' symbols.');
         document.querySelector('#status_load').innerHTML = 'end load price with '+size+' symbols.. Pls next generate graf!';
+        $('#reloadGraf').show();
     }
     x.send(null);
 }
@@ -328,6 +334,7 @@ function findPathInGraf() {
     let timeWork = ((Date.now() - dateTime) / 1000);
     console.log('findPathInGraf() END (time: '+timeWork+'s, count: '+nextPairCount+')');
     document.querySelector('#status_load').innerHTML = 'end generate graf! (time: '+timeWork+'s, count: '+nextPairCount+')';
+    $('#viewFoundChain').show();
 }
 
 function findNextPair(coin, money, lvl, beforeCoin, beforePair, beforeCourse) {

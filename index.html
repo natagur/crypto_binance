@@ -1,0 +1,58 @@
+﻿<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+	<script src="./scripts.js"></script>
+</head>
+<body>
+	<a href="https://api.coinpaprika.com/v1/coins" target="_blank">Список монет</a>
+	<div>Сначала Загрузить курсы монет, после загрузки сгенерировать граф, потом отобразить цепочки монет</div>
+	<a href="#" id="reloadPrice">Загрузить курсы</a>
+	<a href="#" id="reloadGraf">Сгенерировать граф</a>
+	<a href="#" id="viewFoundChain">Отобразить цепочки</a>
+	<select id="coin"></select>
+	<p id="diffCourseMarket"></p>
+	<div id="status_load"></div>
+	<div class="result_list">
+		<table class="table list_market">
+			<tr>
+				<th>Market name</th><th>Pair</th><th>item.market_url</th><th>Price</th><th>item.quotes.USD.volume_24h</th>
+			</tr>
+		</table>
+		<table class="table list_pair_sequence">
+			<tr>
+				<th>Start money</th><th>Start Coin</th><th>Step-to-step pairs</th><th>End money</th><th>Button</th><th>Result</th>
+<!--				<tr class="market_coin"><td>(1) 100</td><td>USDT</td><td><p>Count pair: 4</p><p>, USDTTRY, PORTOTRY, PORTOEUR, EURUSDT</p><p>, 19.00000000, 52.23000000, 2.63500000, 1.06580000</p></td><td>102.04489768598202</td><td><a class="button_update" data-pair="FTMUSDT,FTMBIDR,AXSBIDR,AXSUSDT" href="http://createwebpages.ru/crypto/load.php?url=https://api.binance.com/api/v3/ticker/bookTicker?symbols=[&quot;USDTTRY&quot;,&quot;PORTOTRY&quot;,&quot;PORTOEUR&quot;,&quot;EURUSDT&quot;]" target="_blank">Свежие данные</a></td><td><div class="result_update"></div></td></tr>-->
+			</tr>
+		</table>
+	</div>
+</body>
+</html>
+<style>
+	th {
+		cursor: pointer;
+	}
+	.white {
+		color: #18a718;
+		font-weight: 700;
+	}
+	.market_coin p {
+		margin: 0;
+	}
+	td {
+		border-bottom: 1px solid gray;
+	}
+	.result_update,
+	.result_update .list {
+		display: flex;
+	}
+	td p,
+	.result_update .list div {
+		white-space: nowrap;
+	}
+	.result_update .list div:first-child {
+		border: 1px solid green;
+	}
+	.result_update .list div:last-child {
+		border: 1px solid firebrick;
+	}
+</style>

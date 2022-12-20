@@ -64,6 +64,15 @@ document.querySelector('#viewFoundChain').addEventListener('click', function (ev
     getResultListCoin(resultListCoin[startCoinGlobal]);
     document.querySelector('#status_load').innerHTML = 'end view chains!';
 });
+document.querySelector('#updateFoundChain').addEventListener('click', function (event) {
+    document.querySelector('#status_load').innerHTML = 'Start view chains...';
+    document.querySelectorAll('.market_coin').forEach(function (el) {
+        el.remove();
+    });
+    updateResultListCoin(startCoinGlobal, startMoneyGlobal);
+    document.querySelector('#status_load').innerHTML = 'end view chains!';
+    console.log('#updateFoundChain');
+});
 $(document).on('click', '.button_update', function (event) {
     let pairs = $(this).data('pair').split(',');
     let thisLink = $(this);
@@ -116,19 +125,19 @@ async function viewActualPrice(thisLink, pairs, coin, money) {
 
             let newMoney = el.ask1;
             let bidOrAsk = '';
-            if (typeMathOperation === 'multiply') {
-                bidOrAsk = 'ask';
-                newMoney = money * el.ask1;
+            if (typeMathOperation === 'divide') {
+                bidOrAsk = 'ask (купить)';
+                newMoney = money / el.ask1;
             } else {
-                bidOrAsk = 'bid';
-                newMoney = money / el.bid1;
+                bidOrAsk = 'bid (продать)';
+                newMoney = money * el.bid1;
             }
-            let str = '<div class="content"><p>'+el.pair+' ('+typeMathOperation+': ('+bidOrAsk+'))<br>m:'+money+'<br>nm:'+newMoney+'</p><div class="list"><div>'+el.strAsks+'</div><div>'+el.strBids+'</div></div></div>';
+            let str = '<div class="content"><p>'+el.pair+' ('+typeMathOperation+': ('+bidOrAsk+'))<br>m:'+money+'<br>nm:'+newMoney+'</p><div class="list"><div><p>Ask:</p>'+el.strAsks+'</div><div><p>Bid:</p>'+el.strBids+'</div></div></div>';
 
             money = newMoney;
             thisLink.parents('tr').find('.result_update').append(str);
         });
-    }, 1200);
+    }, 2000);
 
     return result;
 }
@@ -148,7 +157,8 @@ let listMarket = ['BinanceUS', 'Binance'];
 let listCoinApprove = ['USDT', 'LTC', 'BTC', 'DOGE', 'ETH',/* 'BNB',*/ 'XRP', 'ADA', 'MATIC', 'DOT', 'TRX', 'SOL', 'SHIB', 'UNI', 'AVAX', 'WBTC', 'LINK', 'XMR', 'ATOM', 'ALGO'];
 //loadAllMarket();
 function loadAllMarket() {
-    getListAllCoin();
+    //getListAllCoin();
+    getListCoin(0);
 }
 
 function viewPairs() {
@@ -182,7 +192,9 @@ function getListAllCoin() {
             }
         });
         let size = Object.keys(listCoin).length;
-        document.querySelector('#status_load').innerHTML = 'end load coin ('+size+')! Start load price...';
+        let str = 'end load coin ('+size+')! Start load price...';
+        console.log(str);
+        document.querySelector('#status_load').innerHTML = str;
         getListCoin(0);
     }
     x.send(null);
@@ -309,7 +321,7 @@ listPriceTest = {
         'price': 0.00000496
     }],
 };
-let skipCoins = ['NGN', 'XRPUP', 'ETHDOWN', 'BNBUP', 'LINKDOWN', 'UPUSDT', 'DOWNUSDT',
+let skipCoins = ['NGN', 'XRPUP', 'ETHDOWN', 'BNBUP', 'LINKDOWN', 'UPUSDT', 'DOWNUSDT', 'AXSBIDR', 'NBTBIDR',
     /*'USD', 'BUSD', 'BUSDT', 'BBUSD', 'TUSD', 'UST', 'VEN', 'LUNA', 'SUN', 'COCOS', 'BEAM', 'BTS', 'PAX', 'TCT',
 'IDRT', 'USDC', 'COMP', 'IRIS', 'NBT', 'BCN', 'TOMO', 'REP', 'AIONBNB', 'BCC', 'MCO', 'XEM', 'BALBNB', 'ZRXBNB', 'NPXS',
 'HC', 'STORM', 'ALGOBIDR', 'HOTBTC', 'UNIAUD', 'MFTBTC', 'SPELL', 'BTG', 'ARDRETH', 'BTT', 'NULSETH', 'BCHSV', 'LEND',
@@ -322,22 +334,27 @@ listPriceTest = listPrice;
 let globalLvl = 4;
 let startCoinGlobal = 'USDT';
 let endCoinGlobal = 'USDT';
+let commissionGlobal = 0.001;
 let startMoneyGlobal = 100;//usdt
 let resultListCoin = {};
 let iGlobalResultList = 0;
 let nextPairCount = 0;
+let listPairChains = [];
 //findPathInGraf();
 function findPathInGraf() {
     document.querySelector('#status_load').innerHTML = 'Start generate graf...';
     let dateTime = Date.now();
     console.log("findPathInGraf() START...");
     //console.log("listPriceTest:", listPriceTest);
+    listPairChains = [];
     resultListCoin[startCoinGlobal] = findNextPair(startCoinGlobal, startMoneyGlobal, 0, startCoinGlobal);
+    console.log(listPairChains);
     //console.log("resultListCoin: ", resultListCoin[startCoinGlobal]);
     let timeWork = ((Date.now() - dateTime) / 1000);
     console.log('findPathInGraf() END (time: '+timeWork+'s, count: '+nextPairCount+')');
     document.querySelector('#status_load').innerHTML = 'end generate graf! (time: '+timeWork+'s, count: '+nextPairCount+')';
-    $('#viewFoundChain').show();
+    // $('#viewFoundChain').show();
+    $('#updateFoundChain').show();
 }
 
 function findNextPair(coin, money, lvl, beforeCoin, beforePair, beforeCourse) {
@@ -358,14 +375,14 @@ function findNextPair(coin, money, lvl, beforeCoin, beforePair, beforeCourse) {
     }
     let resultListCoin = {};
     let i = 0;
-    for (const keyCoin in listCoinWithPairs[coin]) {
-        nextPairCount++;
-        let pair = listCoinWithPairs[coin][keyCoin];
-        // for (const pair in listPriceTest) {
+    // for (const keyCoin in listCoinWithPairs[coin]) {
+    //     let pair = listCoinWithPairs[coin][keyCoin];
+    for (const pair in listPriceTest) {
         i++;
         // if (i > 300) {
         // 	break;
         // }
+        nextPairCount++;
         let typeMathOperation = pair.indexOf(coin) === 0 ? 'multiply' : pair.indexOf(coin) > -1 ? 'divide' : 'false';
         if (typeMathOperation !== 'false') {
             // console.log('pair lvl('+lvl+'): ',pair)
@@ -375,7 +392,8 @@ function findNextPair(coin, money, lvl, beforeCoin, beforePair, beforeCourse) {
             console.log(pair.indexOf(coin));
             console.log(typeMathOperation);*/
             let startCoin = pair.replace(coin, '');
-            if ((beforeCoin.indexOf(startCoin) === -1 || startCoin === endCoinGlobal && coin !== endCoinGlobal) && skipCoins.indexOf(startCoin) === -1 && skipCoins.indexOf(pair) === -1) {
+            // if ((beforeCoin.indexOf(startCoin) === -1 || startCoin === endCoinGlobal && coin !== endCoinGlobal) && skipCoins.indexOf(startCoin) === -1 && skipCoins.indexOf(pair) === -1)
+            {
                 //console.log(startCoin);
                 //console.log(startCoin+": "+skipCoins.indexOf(startCoin));
                 //console.log(startCoin+": yes");
@@ -387,11 +405,11 @@ function findNextPair(coin, money, lvl, beforeCoin, beforePair, beforeCourse) {
                 if (typeof listPriceTest[pair][0] !== 'undefined') {
                     let startMoney = listPriceTest[pair][0].price;//TODO: переделать на несколько бирж, пока только первая
                     let price = 0;
-                    if (typeMathOperation === 'multiply') {
-                        startMoney = money * listPriceTest[pair][0].askPrice;
+                    if (typeMathOperation === 'divide') {
+                        startMoney = money / listPriceTest[pair][0].askPrice;
                         price = 'a:' + listPriceTest[pair][0].askPrice;
                     } else {
-                        startMoney = money / listPriceTest[pair][0].bidPrice;
+                        startMoney = money * listPriceTest[pair][0].bidPrice;
                         price = 'b:' + listPriceTest[pair][0].bidPrice;
                     }
                     let newBeforeCoin = beforeCoin+', '+startCoin;
@@ -410,6 +428,9 @@ function findNextPair(coin, money, lvl, beforeCoin, beforePair, beforeCourse) {
                         'nextDeep': startCoin != endCoinGlobal && lvl < globalLvl ? findNextPair(startCoin, startMoney, lvl, newBeforeCoin, newBeforePair, newBeforeCourse) : {},
                         //'nextDeep': lvl > 2 ? {} : findNextPair(startCoin, startMoney, lvl),
                     };
+                    if (startCoin == endCoinGlobal || lvl > globalLvl) {
+                        listPairChains.push(newBeforePair);
+                    }
                 }
             }
         }
@@ -424,7 +445,7 @@ function getResultListCoin(resultListCoin) {
         let element = resultListCoin[pair];
         if (element.startCoin === endCoinGlobal) {
             var count = (element.beforeCoin.match(/\,/g) || []).length;
-            if (count > 2 && element.startMoney > startMoneyGlobal+2 && element.startMoney < startMoneyGlobal+100) {
+            if (count > 2 && element.startMoney > startMoneyGlobal + 0.05 && element.startMoney < startMoneyGlobal+100) {
                 iGlobalResultList++;
                 let div = document.createElement('tr');
                 div.setAttribute('class', 'market_coin');
@@ -440,6 +461,48 @@ function getResultListCoin(resultListCoin) {
         }
     }
     //}
+}
+
+function updateResultListCoin(startCoin, startMoney) {
+    iGlobalResultList = 0;
+    for (const chainKey in listPairChains) {
+        iGlobalResultList++;
+        let arrayBeforePair = listPairChains[chainKey].split(', ').filter((pair) => {
+            return pair !== '' ? pair : false;
+        });
+        let coin = startCoin;
+        let money = startMoney;
+        let beforeCourse = '';
+        for (const pairKey in arrayBeforePair) {
+            let pair = arrayBeforePair[pairKey];
+            let pairPrice = listPrice[pair][0];
+            let typeMathOperation = pair.indexOf(coin) === 0 ? 'multiply' : pair.indexOf(coin) > -1 ? 'divide' : 'false';
+
+            let price = '';
+            let newMoney = 0;
+            if (typeMathOperation === 'divide') {
+                newMoney = money / Number(pairPrice.askPrice);
+                price = 'a:' + Number(pairPrice.askPrice);
+            } else {
+                newMoney = money * Number(pairPrice.bidPrice);
+                price = 'b:' + Number(pairPrice.bidPrice);
+            }
+            beforeCourse = beforeCourse+', '+price;
+
+            money = newMoney - (newMoney * commissionGlobal);
+            coin = pair.replace(coin, '');
+        }
+
+        let countPair = arrayBeforePair.length;
+        if (countPair > 2 && money > 0 && money > startMoneyGlobal + 0.05 && money < startMoneyGlobal + 100) {
+            let div = document.createElement('tr');
+            div.setAttribute('class', 'market_coin');
+            let href = 'http://createwebpages.ru/crypto/load.php?url=https://api.binance.com/api/v3/ticker/bookTicker?symbols=["' + arrayBeforePair.join('","') + '"]';
+            div.innerHTML = "<td>(" + iGlobalResultList + ") " + startMoney + "</td><td>" + startCoin + "</td><td><p>Count pair: " + countPair + "</p><p>" + arrayBeforePair.join(', ') + "</p><p>" + beforeCourse + "</p></td><td>" + money + "</td><td><a class='button_update' data-pair='" + arrayBeforePair.join(',') + "' href='" + href + "' target='_blank'>Свежие данные</a></td><td><div class='result_update'></div></td>";
+            document.querySelector('.list_pair_sequence').append(div);
+            // console.log(listPairChains[chainKey]);
+        }
+    }
 }
 /**********************************/
 /**********************************/

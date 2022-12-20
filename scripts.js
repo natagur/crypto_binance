@@ -66,12 +66,13 @@ document.querySelector('#viewFoundChain').addEventListener('click', function (ev
 });
 document.querySelector('#updateFoundChain').addEventListener('click', function (event) {
     document.querySelector('#status_load').innerHTML = 'Start view chains...';
+    console.log('Start view chains...');
     document.querySelectorAll('.market_coin').forEach(function (el) {
         el.remove();
     });
     updateResultListCoin(startCoinGlobal, startMoneyGlobal);
+    console.log('end view chains!');
     document.querySelector('#status_load').innerHTML = 'end view chains!';
-    console.log('#updateFoundChain');
 });
 $(document).on('click', '.button_update', function (event) {
     let pairs = $(this).data('pair').split(',');
@@ -154,11 +155,11 @@ let listPrice = [];//список всех пар
 // let listUrl = [ 'https://api.binance.com/api/v3/ticker/price', 'https://api.binance.us/api/v3/ticker/price',];
 let listUrl = [ 'https://api.binance.com/api/v3/ticker/bookTicker'];
 let listMarket = ['BinanceUS', 'Binance'];
-let listCoinApprove = ['USDT', 'LTC', 'BTC', 'DOGE', 'ETH',/* 'BNB',*/ 'XRP', 'ADA', 'MATIC', 'DOT', 'TRX', 'SOL', 'SHIB', 'UNI', 'AVAX', 'WBTC', 'LINK', 'XMR', 'ATOM', 'ALGO'];
+let listCoinApprove = ['USDT', 'LTC', 'BTC', 'DOGE', 'ETH', 'BNB', 'XRP', 'ADA', 'MATIC', 'DOT', 'TRX', 'SOL', 'SHIB', 'UNI', 'AVAX', 'WBTC', 'LINK', 'XMR', 'ATOM', 'ALGO'];
 //loadAllMarket();
 function loadAllMarket() {
-    //getListAllCoin();
-    getListCoin(0);
+    getListAllCoin();
+    // getListCoin(0);
 }
 
 function viewPairs() {
@@ -348,12 +349,12 @@ function findPathInGraf() {
     //console.log("listPriceTest:", listPriceTest);
     listPairChains = [];
     resultListCoin[startCoinGlobal] = findNextPair(startCoinGlobal, startMoneyGlobal, 0, startCoinGlobal);
-    console.log(listPairChains);
+    // console.log(listPairChains);
     //console.log("resultListCoin: ", resultListCoin[startCoinGlobal]);
     let timeWork = ((Date.now() - dateTime) / 1000);
     console.log('findPathInGraf() END (time: '+timeWork+'s, count: '+nextPairCount+')');
     document.querySelector('#status_load').innerHTML = 'end generate graf! (time: '+timeWork+'s, count: '+nextPairCount+')';
-    // $('#viewFoundChain').show();
+    $('#viewFoundChain').show();
     $('#updateFoundChain').show();
 }
 
@@ -375,9 +376,9 @@ function findNextPair(coin, money, lvl, beforeCoin, beforePair, beforeCourse) {
     }
     let resultListCoin = {};
     let i = 0;
-    // for (const keyCoin in listCoinWithPairs[coin]) {
-    //     let pair = listCoinWithPairs[coin][keyCoin];
-    for (const pair in listPriceTest) {
+    for (const keyCoin in listCoinWithPairs[coin]) {
+        let pair = listCoinWithPairs[coin][keyCoin];
+    // for (const pair in listPriceTest) {
         i++;
         // if (i > 300) {
         // 	break;
@@ -392,7 +393,7 @@ function findNextPair(coin, money, lvl, beforeCoin, beforePair, beforeCourse) {
             console.log(pair.indexOf(coin));
             console.log(typeMathOperation);*/
             let startCoin = pair.replace(coin, '');
-            // if ((beforeCoin.indexOf(startCoin) === -1 || startCoin === endCoinGlobal && coin !== endCoinGlobal) && skipCoins.indexOf(startCoin) === -1 && skipCoins.indexOf(pair) === -1)
+            if ((beforeCoin.indexOf(startCoin) === -1 || startCoin === endCoinGlobal && coin !== endCoinGlobal) && skipCoins.indexOf(startCoin) === -1 && skipCoins.indexOf(pair) === -1)
             {
                 //console.log(startCoin);
                 //console.log(startCoin+": "+skipCoins.indexOf(startCoin));
@@ -464,9 +465,9 @@ function getResultListCoin(resultListCoin) {
 }
 
 function updateResultListCoin(startCoin, startMoney) {
+    console.log("START iGlobalResultList with count listPairChains[]: ", listPairChains.length);
     iGlobalResultList = 0;
     for (const chainKey in listPairChains) {
-        iGlobalResultList++;
         let arrayBeforePair = listPairChains[chainKey].split(', ').filter((pair) => {
             return pair !== '' ? pair : false;
         });
@@ -489,12 +490,13 @@ function updateResultListCoin(startCoin, startMoney) {
             }
             beforeCourse = beforeCourse+', '+price;
 
-            money = newMoney - (newMoney * commissionGlobal);
+            money = newMoney;// - (newMoney * commissionGlobal);
             coin = pair.replace(coin, '');
         }
 
         let countPair = arrayBeforePair.length;
-        if (countPair > 2 && money > 0 && money > startMoneyGlobal + 0.05 && money < startMoneyGlobal + 100) {
+        if (countPair > 2 && money > 0 && money > startMoneyGlobal + 0.01 && money < startMoneyGlobal + 100) {
+            iGlobalResultList++;
             let div = document.createElement('tr');
             div.setAttribute('class', 'market_coin');
             let href = 'http://createwebpages.ru/crypto/load.php?url=https://api.binance.com/api/v3/ticker/bookTicker?symbols=["' + arrayBeforePair.join('","') + '"]';
@@ -502,7 +504,11 @@ function updateResultListCoin(startCoin, startMoney) {
             document.querySelector('.list_pair_sequence').append(div);
             // console.log(listPairChains[chainKey]);
         }
+        if (iGlobalResultList > 500)
+        break;
     }
+
+    console.log("iGlobalResultList: ", iGlobalResultList);
 }
 /**********************************/
 /**********************************/

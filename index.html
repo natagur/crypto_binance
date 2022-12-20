@@ -1,33 +1,79 @@
-﻿<html>
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>		
+	<link rel="stylesheet" href="fonts/montserrat.css">
 	<link href="styles.css" rel="stylesheet">
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 	<script src="./scripts.js"></script>
 </head>
 <body>
-	<p>ask - продают</p>
-	<p>bid - покупают</p>
-	<a href="https://api.coinpaprika.com/v1/coins" target="_blank">Список монет</a>
-	<div>Сначала Загрузить курсы монет, после загрузки сгенерировать граф, потом отобразить цепочки монет</div>
-	<a href="#" id="reloadPrice">Загрузить курсы</a>
-	<a href="#" id="reloadGraf">Сгенерировать граф</a>
-	<a href="#" id="viewFoundChain">Отобразить цепочки</a>
-	<a href="#" id="updateFoundChain">Обновить цепочки</a>
-	<select id="coin"></select>
-	<p id="diffCourseMarket"></p>
-	<div id="status_load"></div>
-	<div class="result_list">
-		<table class="table list_market">
-			<tr>
-				<th>Market name</th><th>Pair</th><th>item.market_url</th><th>Price</th><th>item.quotes.USD.volume_24h</th>
-			</tr>
-		</table>
-		<table class="table list_pair_sequence">
-			<tr>
-				<th>Start money</th><th>Start Coin</th><th>Step-to-step pairs</th><th>End money</th><th>Button</th><th>Result</th>
-<!--			<tr class="market_coin"><td>(270) 100</td><td>USDT</td><td><p>Count pair: 4</p><p>PORTOUSDT, PORTOEUR, GALEUR, GALUSDT</p><p>, a:2.60460000, b:2.43060000, a:1.04400000, b:1.09000000</p></td><td>102.63643137157207</td><td><a class="button_update" data-pair="PORTOUSDT,PORTOEUR,GALEUR,GALUSDT" href="http://createwebpages.ru/crypto/load.php?url=https://api.binance.com/api/v3/ticker/bookTicker?symbols=[&quot;PORTOUSDT&quot;,&quot;PORTOEUR&quot;,&quot;GALEUR&quot;,&quot;GALUSDT&quot;]" target="_blank">Свежие данные</a></td><td><div class="result_update"></div></td></tr>-->
-			</tr>
-		</table>
-	</div>
+	<main class="main">
+		<section class="block">
+			<div class="container">
+				<div class="block__choice">
+					<div class="block__btn">
+						<a class="link block__link" href="https://api.coinpaprika.com/v1/coins" target="_blank">Список монет
+						<img class="block__link-icon" src="img/icon-btn.svg" alt="иконка монет"></a>
+					</div>
+					<div class="hint">
+						<ul class="hint__list">
+							<li class="hint__item">
+								<p class="link__item-text description">ask - продают</p>
+							</li>
+							<li class="hint__item">
+								<p class="link__item-text description">bid - покупают</p>
+							</li>
+							<li class="hint__item">
+								<p class="link__item-text description">Сначала: загрузить курсы монет, после загрузки сгенерировать граф, потом отобразить цепочки монет.</p>
+							</li>
+						</ul>
+					</div>
+					<div class="block__flex">
+						<div class="block__btn">
+							<a class="link block__link" href="#" id="reloadPrice">
+								Загрузить курсы
+								<img class="block__link-icon" src="img/icon-btn1.svg" alt="иконка загрузки">
+							</a>
+						</div>
+						<div class="block__btn">
+							<a class="link block__link" href="#" id="reloadGraf">
+								Сгенерировать граф
+								<img class="block__link-icon" src="img/icon-btn3.svg" alt="иконка загрузки">
+							</a>
+						</div>
+						<div class="block__btn">
+							<a class="link block__link" href="#" id="viewFoundChain">
+								Отобразить цепочки
+								<img class="block__link-icon" src="img/icon-btn2.svg" alt="иконка загрузки">
+							</a>
+						</div>
+					</div>
+				</div>
+				<select id="coin"></select>
+				<p class="loading description" id="diffCourseMarket"></p>
+				<div class="status_load description" id="status_load"></div>
+				<div class="result_list">
+					<table class="table list_market">
+						<tr>
+							<th>Market name</th><th>Pair</th><th>item.market_url</th><th>Price</th><th>item.quotes.USD.volume_24h</th>
+						</tr>
+					</table>
+					<div class="result_list-table"> 
+						<table class="table list_pair_sequence description">
+							<tr>
+								<th>Start money</th><th>Start Coin</th><th>Step-to-step pairs</th><th>End money</th><th>Button</th><th>Result</th>
+								<!--<tr class="market_coin"><td>(1) 100</td><td>USDT</td><td><p>Count pair: 4</p><p>, USDTTRY, PORTOTRY, PORTOEUR, EURUSDT</p><p>, 19.00000000, 52.23000000, 2.63500000, 1.06580000</p></td><td>102.04489768598202</td><td><a class="button_update" data-pair="FTMUSDT,FTMBIDR,AXSBIDR,AXSUSDT" href="http://createwebpages.ru/crypto/load.php?url=https://api.binance.com/api/v3/ticker/bookTicker?symbols=[&quot;USDTTRY&quot;,&quot;PORTOTRY&quot;,&quot;PORTOEUR&quot;,&quot;EURUSDT&quot;]" target="_blank">Свежие данные</a></td><td><div class="result_update"></div></td></tr>-->
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
 </body>
 </html>

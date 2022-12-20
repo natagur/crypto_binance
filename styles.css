@@ -1,28 +1,183 @@
-
-th {
-    cursor: pointer;
+*,
+*::before,
+*::after {
+	box-sizing: inherit;
 }
+*:focus {
+    outline: 0;
+}
+
+.container {
+    max-width: 1250px;
+    margin: 0 auto; 
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    list-style-type: none;
+}
+
+p {
+    margin: 0;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+img {
+    max-width: 100%;
+}
+
+body,
+header {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    box-sizing: border-box;
+    background: #f5f5f5;
+}
+
+.description {
+    font-size: 20px;
+    color: #000;
+    font-weight: 300;
+}
+
+.block {
+    margin-top: 30px;
+}
+
+.block__btn {
+    margin-bottom: 40px;
+}
+.block__btn:last-child {
+    margin-bottom: 0px;
+}
+
+/* кнопка */
+.link {
+    background: linear-gradient(to bottom, #e3c8d8 0%,#3180a64a 100%);
+    padding: 13px 13px;
+    border-radius: 12px;
+    font-size: 20px;
+    color: #000;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.link:hover {
+    background: linear-gradient(to bottom, #3180a64a 0%,#e3c8d8 100%);
+}
+
+.link:focus {
+    background: linear-gradient(to bottom, #e79ec9 0%,#0c76a94a 100%);
+}
+
+.link:active {
+    background: linear-gradient(to bottom, #e79ec9 0%,#0c76a94a 100%);
+}
+
+.block__link-icon {
+    transform: translateY(4px);
+}
+
+/* подсказка */
+.hint {
+    margin-bottom: 40px;
+}
+
+.hint__item {
+    margin-bottom: 20px;
+}
+
+.block__choice {
+    margin-bottom: 40px;
+}
+
+.block__flex {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+/* загрузка */
+.loading,
+.status_load {
+    cursor: progress;
+}
+
 .white {
     color: #18a718;
     font-weight: 700;
 }
+
 .market_coin p {
     margin: 0;
 }
-td {
-    border-bottom: 1px solid gray;
+
+/* таблица */
+
+.table{
+    border-collapse: collapse;
 }
+
+.result_list-table{
+    overflow-x: auto;
+}
+
+.list_market{
+    margin-bottom: 20px;
+}
+
+.list_pair_sequence {
+    border: 1px solid #615562;
+}
+
+td {
+    border-bottom: 1px solid #615562;
+    border-right: 1px solid #615562;
+    text-align: center;
+    font-size: 18px;
+    padding: 10px;
+}
+td:last-child {
+    border-right: 0px solid #615562;
+}
+
+th {
+    cursor: pointer;
+    font-weight: 400;
+    border-right: 1px solid #615562;
+    border-bottom: 1px solid #615562;
+    font-size: 20px;
+    padding: 10px;
+}
+
+th:last-child {
+    border-right: 0px solid #615562;
+}
+
+/* .result_list table tr th{
+    border: 0px;
+} */
+
 .result_update,
 .result_update .list {
     display: flex;
 }
+
 td p,
 .result_update .list div {
     white-space: nowrap;
 }
+
 .result_update .list div:first-child {
     border: 1px solid green;
 }
+
 .result_update .list div:last-child {
     border: 1px solid firebrick;
 }
@@ -30,4 +185,11 @@ td p,
 #viewFoundChain,
 #updateFoundChain {
     display: none;
+}
+
+@media (max-width: 800px) {
+    .block__flex {
+        display: block;
+        text-align: center;
+    }
 }
